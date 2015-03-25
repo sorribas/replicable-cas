@@ -1,0 +1,19 @@
+{
+  "name": "replicable-cas",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "level-sublevel": "^6.4.6",
+    "scuttleup": "^3.1.0"
+  },
+  "devDependencies": {
+    "level-test": "^1.7.0",
+    "tape": "^3.5.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eduardo Sorribas <eduardo@sorribas.org> (http://sorribas.org/)",
+  "license": "ISC"
+}
