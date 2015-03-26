@@ -5,7 +5,9 @@
   "main": "index.js",
   "dependencies": {
     "level-sublevel": "^6.4.6",
-    "scuttleup": "^3.1.0"
+    "pump": "^1.0.0",
+    "scuttleup": "^3.1.0",
+    "through2": "^0.6.3"
   },
   "devDependencies": {
     "level-test": "^1.7.0",

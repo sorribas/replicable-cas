@@ -15,12 +15,11 @@ test('basic test', function(t) {
   store.put('hello world', function(err, key) {
     t.notOk(err);
     t.equal(key, 'uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=');
+    store.get('uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=', function(err, val) {
+      t.notOk(err);
+      t.equal(val, 'hello world');
+    });
     setTimeout(function() {
-      store.get('uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=', function(err, val) {
-        t.notOk(err);
-        t.equal(val, 'hello world');
-      });
-
       store2.get('uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=', function(err, val) {
         t.notOk(err);
         t.equal(val, 'hello world');

@@ -10,10 +10,19 @@ var cas = function(db, opts) {
   var log = scuttleup(subs.sublevel('log'), {id: opts.id});
   var store = subs.sublevel('store');
   var that = new events.EventEmitter();
+  var cbs = {};
+  var head = 0;
 
   var changeStream = through.obj(function(dta, enc, cb) {
     var onbatch = function(err) {
       if (err) that.emit('error', err);
+      if (dta.peer === log.id) {
+        head = dta.seq;
+        if (cbs[dta.seq]) {
+          cbs[dta.seq]();
+          delete cbs[dta.seq];
+        }
+      }
       cb();
     };
 
@@ -47,9 +56,10 @@ var cas = function(db, opts) {
   that.put = function(content, cb) {
     cb = cb || function() {};
     var key = crypto.createHash('sha256').update(content).digest('base64');
-    log.append(JSON.stringify({type:'put', key: key, value: content}), function(err) {
+    log.append(JSON.stringify({type:'put', key: key, value: content}), function(err, change) {
       if (err) return cb(err);
-      cb(null, key);
+      if (head >= change.seq) return cb(null, key);
+      cbs[change.seq] = function() { cb(null, key) };
     });
   };
 
