@@ -10,6 +10,8 @@
     "through2": "^0.6.3"
   },
   "devDependencies": {
+    "after-all": "^2.0.2",
+    "concat-stream": "^1.4.7",
     "level-test": "^1.7.0",
     "tape": "^3.5.0"
   },
