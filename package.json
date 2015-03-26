@@ -14,7 +14,7 @@
     "tape": "^3.5.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test"
   },
   "author": "Eduardo Sorribas <eduardo@sorribas.org> (http://sorribas.org/)",
   "license": "ISC"
