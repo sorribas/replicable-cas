@@ -1,14 +1,16 @@
 var scuttleup = require('scuttleup');
 var crypto = require('crypto');
 var events = require('events');
-var sublevel = require('level-sublevel');
+var subleveldown = require('subleveldown');
 var pump = require('pump');
 var through = require('through2');
 
 var cas = function(db, opts) {
-  var subs = sublevel(db)
-  var log = scuttleup(subs.sublevel('log'), {id: opts.id});
-  var store = subs.sublevel('store');
+  if (!opts) opts = {};
+
+  var logopts = opts.id ? {id: opts.id} : {};
+  var log = scuttleup(subleveldown(db, 'log'), logopts);
+  var store = subleveldown(db, 'store');
   var that = new events.EventEmitter();
   var cbs = {};
   var head = 0;
@@ -71,10 +73,21 @@ var cas = function(db, opts) {
     });
   };
 
-  that.get = store.get;
-  that.createValueStream = store.createValueStream;
-  that.createKeyStream = store.createKeyStream;
-  that.createReadStream = store.createReadStream;
+  that.get = function(key, cb) {
+    store.get(key, cb);
+  };
+
+  that.createValueStream = function(opts) {
+    return store.createValueStream(opts);
+  };
+
+  that.createKeyStream = function(opts) {
+    return store.createKeyStream(opts);
+  };
+
+  that.createReadStream = function(opts) {
+    return store.createReadStream(opts);
+  };
 
   return that;
 };

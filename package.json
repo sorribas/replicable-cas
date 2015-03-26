@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "level-sublevel": "^6.4.6",
     "pump": "^1.0.0",
     "scuttleup": "^3.1.0",
+    "subleveldown": "^2.0.0",
     "through2": "^0.6.3"
   },
   "devDependencies": {
