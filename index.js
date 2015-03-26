@@ -63,8 +63,12 @@ var cas = function(db, opts) {
     });
   };
 
-  that.del = function(key) {
-    log.append(JSON.stringify({type:'del', key: key}));
+  that.del = function(key, cb) {
+    log.append(JSON.stringify({type:'del', key: key}), function(err, change) {
+      if (err) return cb(err);
+      if (head >= change.seq) return cb(null);
+      cbs[change.seq] = function() { cb(null) };
+    });
   };
 
   that.get = store.get;
