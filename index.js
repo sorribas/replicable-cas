@@ -66,8 +66,8 @@ var cas = function(db, opts) {
   that.del = function(key, cb) {
     log.append(JSON.stringify({type:'del', key: key}), function(err, change) {
       if (err) return cb(err);
-      if (head >= change.seq) return cb(null);
-      cbs[change.seq] = function() { cb(null) };
+      if (head >= change.seq) return cb();
+      cbs[change.seq] = function() { cb() };
     });
   };
 
