@@ -57,7 +57,7 @@ var cas = function(db, opts) {
 
   that.put = function(content, cb) {
     cb = cb || function() {};
-    var key = crypto.createHash('sha256').update(content).digest('base64');
+    var key = crypto.createHash('sha256').update(content).digest('hex');
     log.append(JSON.stringify({type:'put', key: key, value: content}), function(err, change) {
       if (err) return cb(err);
       if (head >= change.seq) return cb(null, key);
