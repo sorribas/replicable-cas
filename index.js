@@ -2,6 +2,8 @@ var scuttleup = require('scuttleup');
 var crypto = require('crypto');
 var events = require('events');
 var sublevel = require('level-sublevel');
+var pump = require('pump');
+var through = require('through2');
 
 var cas = function(db, opts) {
   var subs = sublevel(db)
@@ -9,13 +11,14 @@ var cas = function(db, opts) {
   var store = subs.sublevel('store');
   var that = new events.EventEmitter();
 
-  var onchange = function(dta) {
+  var changeStream = through.obj(function(dta, enc, cb) {
     var onbatch = function(err) {
       if (err) that.emit('error', err);
+      cb();
     };
 
     var onget = function(err, heads) {
-      if (err && err.message !== 'Key not found in database') return that.emit('error', err);
+      if (err && !err.notFound) return that.emit('error', err);
       heads = heads? JSON.parse(heads) : {};
       heads[dta.peer] = {peer: dta.peer, seq: dta.seq};
       store.batch([
@@ -25,16 +28,16 @@ var cas = function(db, opts) {
     };
 
     store.get('heads', onget);
-  };
+  });
 
   store.get('heads', function(err, heads) {
-    if (err && err.message !== 'Key not found in database') return that.emit('error', err);
-    if (!heads) return log.createReadStream({live: true}).on('data', onchange);
+    if (err && !err.notFound) return that.emit('error', err);
+    if (!heads) return pump(log.createReadStream({live: true, since: hds}), changeStream);
     heads = JSON.parse(heads);
     var hds = Object.keys(heads).map(function(key) {
       return heads[key];
     });
-    log.createReadStream({live: true, since: hds}).on('data', onchange);
+    pump(log.createReadStream({live: true, since: hds}), changeStream);
   });
 
   that.syncStream = function() {
