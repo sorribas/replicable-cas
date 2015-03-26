@@ -1,5 +1,5 @@
 {
-  "name": "replicable-cas",
+  "name": "replicable-content-addressable-store",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
