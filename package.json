@@ -19,5 +19,5 @@
     "test": "node test"
   },
   "author": "Eduardo Sorribas <eduardo@sorribas.org> (http://sorribas.org/)",
-  "license": "ISC"
+  "license": "MIT"
 }
